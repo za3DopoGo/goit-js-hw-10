@@ -38,5 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       }
       delayInput.value = '';
+      stateInputs.forEach(input => input.checked = false);
   });
 });
