@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         position: "topRight",
       });
       }
-      delayInput.value = '';
-      stateInputs.forEach(input => input.checked = false);
+      form.reset();
   });
 });
