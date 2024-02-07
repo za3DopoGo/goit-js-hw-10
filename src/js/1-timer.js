@@ -28,7 +28,7 @@ const options = {
 });
            updateStartButton(false);
       } else {
-          updateStartButton(true); 
+        updateStartButton(true); 
           userSelectedDate = selectedDates[0];
         }
     },     
@@ -37,30 +37,38 @@ const options = {
 let userSelectedDate = new flatpickr('input', options);
 
 class Timer {
-    constructor(tick) {
-        this.tick = tick;
+    constructor(updateDisplay) {
+        this.updateDisplay = updateDisplay;
         this.isActive = false;
     }
     start() {
         if (this.isActive) return;
         this.isActive = true;
-         this.updateTime();
-
+        updateStateInput(false);
+        updateStartButton(false);
         this.intervalId = setInterval(() => {
              this.updateTime();
         }, 1000);
+    }
+
+      stop() {
+        clearInterval(this.intervalId);
+        this.isActive = false;
+        // updateStartButton(true);
+        updateStateInput(true); 
+        userSelectedDate.clear(); 
     }
 
     updateTime() {
     const target = userSelectedDate.getTime();
     const now = Date.now();
     if (target <= now) {
-          this.onClose(); 
+         this.stop();
+            return;
     }
     const diff = target - now;
         const timeObj = this.convertMs(diff);
-        updateStartButton(false);
-    this.tick(timeObj);
+        this.updateDisplay(timeObj);
   }
 
     convertMs(ms) {
@@ -83,7 +91,7 @@ class Timer {
 }
 }
 
-const timer = new Timer(tick);
+const timer = new Timer(updateDisplay);
 
 button.addEventListener('click', () => {
     
@@ -91,15 +99,15 @@ button.addEventListener('click', () => {
    
 });
 
-function tick({days, hours, minutes, seconds}) {
-    const timeDays = addZero(days); 
-    const timeHours = addZero(hours); 
-    const timeMin = addZero(minutes);
-    const timeSec = addZero(seconds);
-    dataDays.textContent = timeDays;
-    dataHours.textContent = timeHours;
-    dataMin.textContent = timeMin;
-    dataSec.textContent = timeSec;
+function updateDisplay({days, hours, minutes, seconds}) {
+    const formattedDays = addZero(days); 
+    const formattedHours = addZero(hours); 
+    const formattedMin = addZero(minutes);
+    const formattedSec = addZero(seconds);
+    dataDays.textContent = formattedDays;
+    dataHours.textContent = formattedHours;
+    dataMin.textContent = formattedMin;
+    dataSec.textContent = formattedSec;
 }
 
 function addZero(num) {
@@ -108,4 +116,8 @@ function addZero(num) {
 
 function updateStartButton(isActive) {
   button.disabled = !isActive;
+}
+
+function updateStateInput(isActive) {
+  input.disabled = !isActive;
 }
