@@ -54,9 +54,7 @@ class Timer {
       stop() {
         clearInterval(this.intervalId);
         this.isActive = false;
-        // updateStartButton(true);
         updateStateInput(true); 
-        userSelectedDate.clear(); 
     }
 
     updateTime() {
